@@ -1,0 +1,93 @@
+server:
+  port: 9944
+
+title: "BOS API SERVER"
+
+spring:
+  codec:
+    max-in-memory-size: 10MB
+  devtools:
+    livereload:
+      enable: true
+    restart:
+      enabled: true
+      exclude: static/**. templates/**
+  lifecycle:
+    timeout-per-shutdown-phase: 5s
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: always
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver # 사용할 JDBC 드라이버 클래스
+#    로컬 DB
+    url: jdbc:mysql://localhost:3306/bos?characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+    username: bosuser
+#    password: 1234
+#    url: jdbc:mysql://3.34.179.41:3306/bos?characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+    password: Bosuser1234!!
+    auto_commit: true  # 자동 커밋 활성화 여부
+    # connection-test-query: SELECT 1  # 데이터베이스 연결 테스트용 쿼리
+    minimum-idle: 3  # 커넥션 풀에서 유지할 최소 커넥션 수
+    maximum-pool-size: 30  # 커넥션 풀에서 가질 수 있는 최대 커넥션 수
+    pool-name: hikari-cp  # HikariCP 커넥션 풀의 이름
+
+  sql:
+    init:
+      mode: always # 모든 데이터베이스에 sql 스크립트를 동작
+
+  jpa:
+    database: mysql  # 사용하는 데이터베이스 종류
+    database-platform: org.hibernate.dialect.MySQL8Dialect  # Hibernate가 사용할 데이터베이스의 플랫폼
+    show-sql: true  # SQL 쿼리를 콘솔에 출력할지 여부
+    hibernate:
+      dialect:
+        storage_engine: innodb  # Hibernate가 사용할 데이터베이스의 스토리지 엔진
+      ddl-auto: update  # 데이터베이스 스키마 자동 생성 및 변경 전략 설정
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl  # 물리적 네이밍 전략 설정
+      properties:
+        hibernate:
+          format_sql: true  # 생성된 SQL 쿼리를 예쁘게 출력할지 여부
+    defer-datasource-initialization: true # Hibernate가 초기화 후(테이블 생성) sql 스크립트 실행
+
+  logging:
+    level:
+      org.springframework.web: debug
+      org.springframework: debug  # Spring Framework에 대한 로깅 레벨 설정
+      org.hibernate.SQL: debug  # Hibernate SQL에 대한 디버그 레벨 설정
+      org.hibernate.type: trace  # Hibernate 타입에 대한 추적 레벨 설정
+    pattern:
+      file: "[%d{HH:mm:ss.SSS}][%-5level][%logger.%method:line%line] - %msg%n"
+      level:
+
+    file:
+      name: work2\BOS\work\hos.log # 로그 파일의 경로 및 이름 설정
+      #name: logs/hos.log # 로그 파일의 경로 및 이름 설정
+
+    logback:
+      max-history: 30 # 유지할 로그 파일의 최대 기간 설정
+      file-name-pattern: "logs/hos.%d{yyyy-MM-dd}.%i" # 로그 파일 이름 패턴 설정
+
+springdoc:
+  version: '1.0'  # springdoc OpenAPI의 버전 설정
+  remove-broken-reference-definitions: false  # 잘못된 참조 정의를 제거할지 여부 설정
+  default-consumes-media-type: application/json;charset=UTF-8  # 기본 소비 미디어 타입을 JSON으로 설정
+  default-produces-media-type: application/json;charset=UTF-8  # 기본 생성 미디어 타입을 JSON으로 설정
+  api-docs:
+    groups:
+      enable: true  # API 문서 그룹을 사용할지 여부 설정
+  swagger-ui:
+    operations-sorter: alpha  # Swagger UI에서 작업을 알파벳순으로 정렬할지 여부 설정
+    tags-sorter: alpha  # Swagger UI에서 태그를 알파벳순으로 정렬할지 여부 설정
+    path: /api-docs  # Swagger UI의 경로 설정
+    disable-swagger-default-url: true  # Swagger UI의 기본 URL 비활성화 여부 설정
+    doc-expansion: none  # 문서 확장 방법 설정
+  path-to-match:
+    - /**  # 일치하는 경로 설정
+
+jwt:
+  secret: 64461f01e1af406da538b9c48d801ce59142452199ff112fb5404c8e7e98e3ff # 랜덤 키... HS256알고리즘 사용을 위해 32글자 이상 설정
+
+
